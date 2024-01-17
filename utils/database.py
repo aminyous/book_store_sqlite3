@@ -16,9 +16,8 @@ def create_book_table():
 def add_book(name, author):
     connection = sqlite3.connect('data.db')
     cursor = connection.cursor()
-    cursor.execute(f'INSERT INTO books VALUES("{name}", "{author}", 0)')  # we put "" around the values so we can put
-    # the actual value not the table name
-    # This is not the recommanded approach
+    cursor.execute(f'INSERT INTO books VALUES(?, ?, 0)', (name, author))  # This is the right way to avoid
+    # sql injection attack
     connection.commit()
     connection.close()
 
