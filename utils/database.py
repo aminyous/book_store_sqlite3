@@ -8,15 +8,19 @@ books_file = "books.json"
 def create_book_table():
     connection = sqlite3.connect('data.db')
     cursor = connection.cursor()
-    cursor.execute("CREATE TABLE books(name text primary key, author text, read integer)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS books(name text primary key, author text, read integer)")
     connection.commit()
     connection.close()
 
 
 def add_book(name, author):
-
-    books = get_all_books()
-    books.append({"name": name, "author": author, "read": False})
+    connection = sqlite3.connect('data.db')
+    cursor = connection.cursor()
+    cursor.execute(f'INSERT INTO books VALUES("{name}", "{author}", 0)')  # we put "" around the values so we can put
+    # the actual value not the table name
+    # This is not the recommanded approach
+    connection.commit()
+    connection.close()
 
 
 def get_all_books():
