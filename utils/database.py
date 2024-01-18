@@ -2,8 +2,6 @@ import sqlite3
 
 """ This is an interface between our app and data storage mechanism """
 
-books_file = "books.json"
-
 
 def create_book_table():
     connection = sqlite3.connect('data.db')
@@ -23,9 +21,13 @@ def add_book(name, author):
 
 
 def get_all_books():
-
-    with open(books_file, "r") as file:
-        return json.load(file)
+    connection = sqlite3.connect('data.db')
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM books")
+    books = [{"name": row[0], "author": row[1], "read": row[2]} for row in cursor.fetchall()]  # we get a list of tuples
+    # we could convert it as a list of dict like so
+    connection.close()
+    return books
 
 
 def _save_all_books(books):
