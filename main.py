@@ -48,7 +48,8 @@ def list_book():
     books = database.get_all_books()
     if len(books) > 0:
         for index, book in enumerate(books):
-            print(f"{index + 1} - Book name : {book['name']}, book author : {book['author']}, read : {book['read']}")
+            read = 'YES' if book['read'] else 'NO'
+            print(f"{index + 1} - {book['name']} by {book['author']}, read: {read}")
     else:
         print("Book list is empty")
 

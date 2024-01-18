@@ -14,7 +14,7 @@ def create_book_table():
 def add_book(name, author):
     connection = sqlite3.connect('data.db')
     cursor = connection.cursor()
-    cursor.execute(f'INSERT INTO books VALUES(?, ?, 0)', (name, author))  # This is the right way to avoid
+    cursor.execute('INSERT INTO books VALUES(?, ?, 0)', (name, author))  # This is the right way to avoid
     # sql injection attack
     connection.commit()
     connection.close()
@@ -30,26 +30,20 @@ def get_all_books():
     return books
 
 
-def _save_all_books(books):
-    with open(books_file, "w") as file:
-        json.dump(books, file)
-
-
 def read_book(name):
-    books = get_all_books()
-
-    for book in books:
-        if book["name"] == name:
-            book["read"] = True
-    _save_all_books(books)
+    connection = sqlite3.connect('data.db')
+    cursor = connection.cursor()
+    cursor.execute("UPDATE books SET read=1 WHERE name=?", (name,))
+    connection.commit()
+    connection.close()
 
 
 def delete_book(name):
-    books = get_all_books()
-
-    books = [book for book in books if(book["name"] != name)]
-
-    _save_all_books(books)
+    connection = sqlite3.connect('data.db')
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM books WHERE name=?", (name,))
+    connection.commit()
+    connection.close()
 
 
 
