@@ -14,10 +14,13 @@ def create_book_table():
 def add_book(name, author):
     connection = sqlite3.connect('data.db')
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO books VALUES(?, ?, 0)', (name, author))  # This is the right way to avoid
-    # sql injection attack
-    connection.commit()
-    connection.close()
+    try:
+        cursor.execute('INSERT INTO books VALUES(?, ?, 0)', (name, author))
+        connection.commit()
+    except sqlite3.IntegrityError:
+        print("You just entered a name that does exist, please try again.")
+    finally:
+        connection.close()
 
 
 def get_all_books():
